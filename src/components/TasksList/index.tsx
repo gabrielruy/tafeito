@@ -1,22 +1,25 @@
 
 import React from 'react';
 
+import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
+
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
-import AttachFile from '@mui/icons-material/AttachFile';
-import Label from '@mui/icons-material/Label';
+
+
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {Task, Category, Tag} from '../../common/types';
 import { useAxios } from '../../hooks/useAxios';
 import TagsInput from '../TagsInput';
+import TaskAttachFile from '../TaskAttachFile';
+import AttachFile from '../AttachFile';
 
 type TasksListProps = {
   tasks: Task[];
@@ -113,6 +116,7 @@ export default function TasksList(props:TasksListProps) {
 
     commitRemoveTag({}, updateTasks, `tarefas/${taskId}/etiquetas/${removedTag.etiqueta}`)
   }
+
   return (
     <>
     <Typography variant='h4' >
@@ -123,15 +127,12 @@ export default function TasksList(props:TasksListProps) {
         const labelId = `checkbox-list-label-${task.id}`;
 
         return (
+          <Box key={`task_${task.id}`}>
           <ListItem
             key={task.id}
             secondaryAction={
               <Stack direction='row' spacing={1}>
-                <Tooltip title='Adicionar Anexo'>
-                <IconButton edge="end" aria-label="anexos">
-                  <AttachFile />
-                </IconButton>
-                </Tooltip>
+                <TaskAttachFile taskId={task.id} updateTasks={updateTasks}/>
                 <Tooltip title='Excluir tarefa'>
                 <IconButton edge="end" aria-label="excluir" onClick={() => {deleteTask(task.id)}}>
                   <Delete />
@@ -167,6 +168,14 @@ export default function TasksList(props:TasksListProps) {
             </ListItem>
             
           </ListItem>
+          <List component="div" disablePadding>
+            {
+              task.anexos.map((anexo) => {
+                return <Box key={`${task.id}_${anexo.id}`}><AttachFile taskId={task.id} anexo={anexo}/></Box>
+              })
+            }
+            </List>
+        </Box>
         );
       })}
     </List>
