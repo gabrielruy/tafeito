@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
+import Delete from '@mui/icons-material/Delete';
 import { useAxios } from '../../hooks/useAxios';
 
 import {Anexo} from '../../common/types';
