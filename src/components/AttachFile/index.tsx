@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Grid from '@mui/material/Grid';
 import { useAxios } from '../../hooks/useAxios';
 
 import {Anexo} from '../../common/types';
@@ -45,11 +46,37 @@ const AttachFile = (props:AttachFileProps) => {
       'blob'
     );
   };
+
+  const handleDeleteAttachment = async (taskId: number, anexo: Anexo) => {
+      let response: any;
+      try {
+        response = await axios({
+          method: 'DELETE',
+          url: `http://localhost:8080/tarefas/${taskId}/anexos/${anexo.id}`,
+          headers: {
+            Authorization: `Bearer ${tokenObj!.token}`
+          },
+        });
+        window.location.reload();
+      } catch (error) {
+        console.log('Erro ao excluir o anexo da tarefa. Log de erro:', error);
+      }
+    };
   
   return (
-    <ListItemButton sx={{ pl: 4 }} onClick={() => {downloadAnexo()}}>
-      <ListItemText primary={anexo.nome} />
-    </ListItemButton>
+    <Grid container spacing={2}>
+        <Grid item xs={4}>
+            <IconButton edge="end" aria-label="Excluir anexo" component="span"
+                onClick={() => { handleDeleteAttachment(taskId, anexo); }}>
+                <Delete />
+            </IconButton>
+        </Grid>
+        <Grid item xs={4}>
+            <ListItemButton sx={{ pl: 4 }} onClick={() => {downloadAnexo()}}>
+                <ListItemText primary={anexo.nome} />
+            </ListItemButton>
+        </Grid>
+    </Grid>
   )
 }
 
